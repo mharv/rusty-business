@@ -5,45 +5,75 @@ fn main() {
     // Ownership and Borrowing
     let owner_string = String::from("Hello, ownership!");
     let modified_string = modify_and_return(owner_string);
+    // println!("\nOwnership and Borrowing Result: {}", owner_string);
     println!("\nOwnership and Borrowing Result: {}", modified_string);
 
     // Lifetime System
-    let string1: String = String::from("Hello");
+    let string1 = String::from("Hello");
     let string2 = String::from("world!");
     let result = combine_strings(&string1, &string2, "Rust");
+
     println!("\nLifetime System Result: {}", result);
+    println!("\nStill available for use: {}", string1);
+    println!("\nStill available for use: {}", string2);
+
+    // let string1 = String::from("Hello");
+    // let result;
+    // {
+    //     let string2 = String::from("world!");
+    //     result = longest(string1.as_str(), string2.as_str());
+    // }
+    // println!("The longest string is {}", result);
 
     // Concurrency without Data Races
     let counter = Arc::new(Mutex::new(0));
     let mut handles = vec![];
-
-    for i in 0..10 {
+    for _ in 0..10 {
         let counter = Arc::clone(&counter);
         let handle = thread::spawn(move || {
             let mut num = counter.lock().unwrap();
-
-            // Introduce a delay to slow down the execution
-            thread::sleep(std::time::Duration::from_secs(1));
-
             *num += 1;
-
-            let thread_id = thread::current().id();
-
-            // Print the thread ID holding the mutex
-            println!("Thread {:?} acquired the lock", thread_id);
         });
-
         handles.push(handle);
     }
-
     for handle in handles {
         handle.join().unwrap();
     }
-
     println!(
         "Concurrency without Data Races Result: {}",
         *counter.lock().unwrap()
     );
+
+    // let counter = Arc::new(Mutex::new(0));
+    // let mut handles = vec![];
+
+    // for i in 0..10 {
+    //     let counter = Arc::clone(&counter);
+    //     let handle = thread::spawn(move || {
+    //         let mut num = counter.lock().unwrap();
+
+    //         // Introduce a delay to slow down the execution
+    //         thread::sleep(std::time::Duration::from_secs(1));
+
+    //         *num += 1;
+
+    //         let thread_id = thread::current().id();
+
+    //         // Print the thread ID holding the mutex
+    //         println!("Thread {:?} acquired the lock", thread_id);
+    //     });
+
+    //     handles.push(handle);
+    // }
+
+    // for handle in handles {
+    //     handle.join().unwrap();
+    // }
+
+    // println!(
+    //     "Concurrency without Data Races Result: {}",
+    //     *counter.lock().unwrap()
+    // );
 
     // Trait System and Pattern Matching
     let circle = Circle { radius: 5.0 };
@@ -137,6 +167,14 @@ fn modify_and_return(s: String) -> String {
 
 fn combine_strings<'a, 'b, 'c>(s1: &'a str, s2: &'b str, s3: &'c str) -> String {
     format!("{} {} {}", s1, s2, s3)
+}
+
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
 }
 
 fn square_numbers(numbers: Vec<i32>) -> Vec<i32> {
