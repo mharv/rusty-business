@@ -26,23 +26,23 @@ fn main() {
     // println!("The longest string is {}", result);
 
     // Concurrency without Data Races
-    let counter = Arc::new(Mutex::new(0));
-    let mut handles = vec![];
-    for _ in 0..10 {
-        let counter = Arc::clone(&counter);
-        let handle = thread::spawn(move || {
-            let mut num = counter.lock().unwrap();
-            *num += 1;
-        });
-        handles.push(handle);
-    }
-    for handle in handles {
-        handle.join().unwrap();
-    }
-    println!(
-        "Concurrency without Data Races Result: {}",
-        *counter.lock().unwrap()
-    );
+    // let counter = Arc::new(Mutex::new(0));
+    // let mut handles = vec![];
+    // for _ in 0..10 {
+    //     let counter = Arc::clone(&counter);
+    //     let handle = thread::spawn(move || {
+    //         let mut num = counter.lock().unwrap();
+    //         *num += 1;
+    //     });
+    //     handles.push(handle);
+    // }
+    // for handle in handles {
+    //     handle.join().unwrap();
+    // }
+    // println!(
+    //     "Concurrency without Data Races Result: {}",
+    //     *counter.lock().unwrap()
+    // );
 
     // let counter = Arc::new(Mutex::new(0));
     // let mut handles = vec![];
@@ -53,7 +53,7 @@ fn main() {
     //         let mut num = counter.lock().unwrap();
 
     //         // Introduce a delay to slow down the execution
-    //         thread::sleep(std::time::Duration::from_secs(1));
+    //         // thread::sleep(std::time::Duration::from_secs(1));
 
     //         *num += 1;
 
@@ -84,6 +84,8 @@ fn main() {
 
     // Using the draw_shape function to draw different shapes
     println!("\nTrait System and Pattern Matching Result: ");
+    circle.reveal();
+    rectangle.reveal();
     draw_shape(&circle);
     draw_shape(&rectangle);
     print_area(&circle);
@@ -112,6 +114,7 @@ trait Drawable {
 }
 
 // Implementing the Drawable trait for Circle
+#[derive(Debug)]
 struct Circle {
     radius: f64,
 }
@@ -129,7 +132,14 @@ impl Drawable for Circle {
     }
 }
 
+impl Circle {
+    fn reveal(&self) {
+        println!("{:?}", self);
+    }
+}
+
 // Implementing the Drawable trait for Rectangle
+#[derive(Debug)]
 struct Rectangle {
     width: f64,
     height: f64,
@@ -145,6 +155,12 @@ impl Drawable for Rectangle {
 
     fn area(&self) {
         println!("The area of this rectangle:  {}", self.width * self.height);
+    }
+}
+
+impl Rectangle {
+    fn reveal(&self) {
+        println!("{:?}", self);
     }
 }
 
